@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="top-part">
+    <img class="grid-item" id="lobby-logo" src="{{ url_for('static', filename='shmonikers_logo.png') }}" alt="logo"
+        width="300px" height="160px" />
+</div>
+
+<form action="{{ url_for('routes.draw_cards', game_id=game_id, player_name=player_name) }}" method="POST">
+    <div id="form_headers">
+        <h2>Pick Your 6 Cards</h2>
+        <p><b>Game ID:</b> {{ game_id }} | <b>Player:</b> {{ player_name }}</p>
+    </div>
+    <div id="cards">
+        {% for card in hand %}
+        <label class="card">
+            <strong class="term">{{ card.term }}</strong>
+            <p></p>
+            <small class="definition">{{ card.definition }}</small>
+            <p></p>
+            <strong class="points">{{ card.points }}</strong>
+            <input type="checkbox" name="card" value="{{ card.term }}">
+        </label>
+        {% endfor %}
+    </div>
+
+    <br><br>
+
+    <div id="card_buttons">
+        <button type="submit" name="refresh" id="refresh">Refresh Cards</button>
+        <button type="submit" name="submit" id="submit">Submit Selected</button>
+    </div>
+
+    <br>
+    <hr style="border: none; border-top: 3px dotted rgb(137, 137, 137); height: 1px;"><br>
+
+    <div id="cards">
+        <div class="custom-card-title">
+            <h3>Enter a Custom Card!</h3>
+        </div>
+        <div id="custom_card_entry">
+            <label>Term:</label><br>
+            <input type="text" name="term"><br>
+            <label>Definition:</label><br>
+            <input type="text" name="definition"><br>
+            <label for="points">Points:</label><br>
+            <select name="points" id="points">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            <button type="submit" name="custom" id="custom">Submit Custom</button>
+        </div>
+    </div>
+
+</form>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<style>
+    .flashes {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    .flashes li {
+        background-color: #f7baf8;
+        color: white;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        border: 1px solid rgb(255, 82, 114);
+    }
+
+    #top-part {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .grid-item {
+        padding: 5px;
+    }
+
+    .custom-card-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+    }
+
+    #custom_card_entry input,
+    #custom_card_entry select {
+        padding: 12px 14px;
+        font-size: 16px;
+        border-radius: 12px;
+        border: 1.5px solid #d1d5db;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    #custom_card_entry button {
+        padding: 12px 26px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        gap: 16px;
+
+        max-width: 1000px;
+        min-height: 200px;
+        margin: 0 auto;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    #form_headers {
+        align-self: center;
+        text-align: center;
+    }
+
+    #card_buttons {
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #card_buttons button {
+        padding: 12px 26px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #refresh {
+        background: rgb(255, 255, 255);
+    }
+
+    #submit {
+        background: rgb(246, 124, 189);
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: 180px;
+        height: 260px;
+        padding: 10px 16px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 14px;
+
+        border: 2px solid #ddd;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .card input {
+        display: none;
+        margin: 3px;
+    }
+
+    .card:has(input:checked) {
+        border-color: #ff69d9;
+        box-shadow: 0 0 0 2px #4f46e520;
+    }
+</style>
+
+{% endblock %}

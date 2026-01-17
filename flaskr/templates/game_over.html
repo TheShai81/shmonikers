@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="real-whole-page">
+
+    <img class="grid-item" id="yippee-blue" src="{{ url_for('static', filename='yippee_blue_emoji.png') }}"
+        alt="what more do you want from me" width="300px" height="380px" />
+
+    <div class="grid-item" id="whole-page">
+
+        <img id="logo" src="{{ url_for('static', filename='shmonikers_logo.png') }}" alt="logo" width="300px"
+            height="130px" />
+
+        <h1 id="winners">🏆 Winners: {{ team_1 }}!</h1>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+
+            <div class="place first">
+                <span class="team">{{ team_1 }}</span>
+                <span class="score">{{ score_1 }}</span>
+            </div>
+
+            <div class="place second">
+                <span class="team">{{ team_2 }}</span>
+                <span class="score">{{ score_2 }}</span>
+            </div>
+        </div>
+
+        <button id="lobby-return" onclick="returnToLobby()">
+            Return To Lobby
+        </button>
+
+    </div>
+
+    <img class="grid-item" id="yippee-blue" src="{{ url_for('static', filename='cat_yippee.gif') }}"
+        alt="Cat dances happily whilst yippeeing." width="300px" height="380px" />
+
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+    const socket = io();
+    const gameId = "{{ game_id }}";
+
+    function returnToLobby() {
+        socket.emit("lobby_return", { "game_id": gameId });
+    }
+
+    socket.on("redirect_to_lobby", (data) => {
+        window.location.href = data.url;
+    });
+</script>
+
+<style>
+    #real-whole-page {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .grid-item {
+        flex: 1;
+        padding: 5px;
+    }
+
+    #whole-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+        text-align: center;
+        padding: 40px 15px;
+    }
+
+    #logo {
+        width: 140px;
+        margin-bottom: 10px;
+    }
+
+    #winners {
+        font-size: 2.5rem;
+        animation: float 2s ease-in-out infinite;
+    }
+
+    .leaderboard {
+        background: white;
+        border-radius: 18px;
+        padding: 30px 40px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        width: min(90%, 420px);
+    }
+
+    .leaderboard h2 {
+        margin-bottom: 20px;
+        font-size: 1.7rem;
+    }
+
+    .place {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        font-size: 1.3rem;
+    }
+
+    .place.first {
+        color: goldenrod;
+        font-weight: bold;
+    }
+
+    .place.second {
+        color: #6b6b6b;
+    }
+
+    #lobby-return {
+        padding: 14px 32px;
+        border-radius: 30px;
+        border: none;
+        font-size: 1.05rem;
+        background: rgb(167, 255, 180);
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #lobby-return:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    }
+
+
+    @keyframes float {
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+</style>
+
+{% endblock %}

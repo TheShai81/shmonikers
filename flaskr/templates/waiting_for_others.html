@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div id="top-part">
+    <img class="grid-item" id="lobby-logo" src="{{ url_for('static', filename='shmonikers_logo.png') }}" alt="logo"
+        width="300px" height="160px" />
+</div>
+
+<div id="waiting_room">
+    <h2>Waiting for other players…</h2>
+
+    <p><b>Game ID:</b> {{ game_id }}</p>
+    <p><b>Player:</b> {{ player_name }}</p>
+
+    <p>Everyone is choosing their 6 cards.</p>
+    <p>When all players have submitted, the Start Round button will appear.</p>
+
+    <strong>Players:</strong>
+    <div id="playerList"></div>
+
+    <button id="startRoundButton" style="display:none;">
+        Start Round
+    </button>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+    const socket = io();
+
+    const gameId = "{{ game_id }}";
+    const playerName = "{{ player_name }}";
+
+    socket.emit("join_game_room", { game_id: gameId, player_name: playerName });
+
+    const intervalId = setInterval(() => {
+        fetch(`/api/check_submissions?game_id=${gameId}`)
+            .then(resp => resp.json())
+            .then(data => {
+                const container = document.getElementById("playerList");
+                container.innerHTML = "";  // clear old list
+                data.players.forEach(name => {
+                    const p = document.createElement("p");
+                    p.textContent = name;
+                    container.appendChild(p);
+                });
+                if (data.all_submitted) {
+                    document.getElementById("startRoundButton").style.display = "block";
+                }
+            });
+    }, 1000);
+
+    document.getElementById("startRoundButton").onclick = () => {
+        clearInterval(intervalId);
+        console.log("Round started — redirecting…");
+        socket.emit("start_round", { game_id: gameId, player_name: playerName });
+        document.getElementById("startRoundButton").style.display = "none";
+    };
+
+
+    socket.on("round_started", data => {
+        clearInterval(intervalId);
+        console.log("Round started — redirecting…");
+        window.location.href = `/start_round?game_id=${gameId}&player_name=${encodeURIComponent(playerName)}`;
+    });
+
+</script>
+
+<style>
+    .flashes {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    .flashes li {
+        background-color: #f7baf8;
+        color: white;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        border: 1px solid rgb(255, 82, 114);
+    }
+
+    #top-part {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .grid-item {
+        padding: 5px;
+    }
+
+    #waiting_room {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        padding: 24px;
+        text-align: center;
+    }
+
+    #waiting_room button {
+        padding: 12px 26px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: none;
+        background: rgb(250, 99, 180);
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+</style>
+
+{% endblock %}

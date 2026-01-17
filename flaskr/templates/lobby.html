@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div id="main">
+    <img class="grid-item" id="lobby-logo" src="{{ url_for('static', filename='shmonikers_logo.png') }}" alt="logo"
+        height="260px" />
+
+    <form class="grid-item" id="info_form" action="{{ url_for('routes.join_game') }}" method="POST">
+        <h2>Join a Shmonikers Game</h2>
+        <label>Moniker:</label><br>
+        <input type="text" name="player_name" required><br><br>
+
+        <label>Game ID (create one or join existing):</label><br>
+        <input type="text" name="game_id" required><br><br>
+
+        <label>Choose Your Team:</label><br>
+        <select name="team_name" required>
+            <option value="Dill Dinkers">Dill Dinkers</option>
+            <option value="Married Couple">Married Couple</option>
+            <option value="Dairy Queens">Dairy Queens</option>
+            <option value="Pookies">Pookies</option>
+            <option value="Beauties">Beauties</option>
+            <option value="Side Pieces">Side Pieces</option>
+            <option value="Beauty and the Beast">Beauty and the Beast</option>
+            <option value="Better Half">Better Half</option>
+        </select><br><br>
+
+        <button type="submit">Join Game</button>
+    </form>
+
+    <div id="kaomojis" class="grid-item">
+        <h3>Copy/Pasteable Kaomojis!!!</h3><br>
+        <p>ฅ^•ﻌ•^ฅ</p>
+        <p>≽^•⩊•^≼</p>
+        <p>ᓚ₍⑅^..^₎♡</p>
+        <p>₍^. .^₎Ⳋ</p>
+        <p>(^>⩊<^)⟆ </p>
+                <p>૮ ˶ᵔ ᵕ ᵔ˶ ა</p>
+                <p>( ≧ᗜ≦)</p>
+                <p>（´∇｀''）</p>
+                <p>⪩. .⪨</p>
+                <p>(∩˃ω˂∩)</p>
+                <p>/ᐠ - ˕ -マ</p>
+                <p>( ◡̀_◡́)ᕤ</p>
+                <p>(っ˕ -｡)</p>
+                <p>(ง ◉ _ ◉)ง</p>
+                <p>•⩊•</p>
+    </div>
+
+</div>
+
+<br>
+<hr style="border: none; border-top: 3px dotted rgb(137, 137, 137); height: 1px;"><br>
+
+<div id="main">
+    <div class="grid-item">
+        <h2>Rules of Shmonikers</h2>
+        <h3>If you've ever played Monikers or Fishbowl, it follows the same rules that you are probably used to.</h3>
+        <ul>
+            <li>This is best played in 2 competing teams of 2 players each, but this app supports any number of teams
+                with
+                any number of players.</li>
+            <li>Once selecting the appropriate team and game ID, you move to drawing cards.</li>
+            <li>Each player draws (or creates! The app offers both functionalities) 6 cards to submit to the game pool
+                for
+                the entire game. Think about your ability to describe/act out the terms as well as the points associated
+                with each one.</li>
+            <li>For each round, play goes around the table with a randomly generated order until the pool is emptied.
+                The
+                pool is then replenished with the SAME cards for the next round.</li>
+            <li><b>Round 1:</b> The actor has as many words as they want to describe each term without using words in
+                the
+                term or abbreviations of the term. If you guess the card then you get it! If it's too hard and you want
+                to
+                skip, just press skip and you can come back to it later.</li>
+            <li><b>Round 2:</b> The actor has only ONE (1) word to describe the term. You can use a different word up to
+                3
+                times before you must skip to the next card.</li>
+            <li><b>Round 3:</b> This round is like charades. The actor can only act out/mime the term. No speaking or
+                sounds.</li>
+            <li>Whichever team has the most points at the end of the game wins!</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .flashes {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+    .flashes li {
+        background-color: #f7baf8;
+        color: white;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        border: 1px solid rgb(255, 82, 114);
+    }
+
+    #main {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .grid-item {
+        flex: 1;
+        padding: 5px;
+    }
+
+    #info_form {
+        max-width: 380px;
+        margin: 40px auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    #info_form label {
+        font-weight: 600;
+        margin-top: 6px;
+    }
+
+    #info_form input,
+    #info_form select {
+        padding: 12px 14px;
+        font-size: 16px;
+        border-radius: 12px;
+        border: 1.5px solid #d1d5db;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    #info_form input:focus,
+    #info_form select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px #4f46e530;
+    }
+
+    #info_form button {
+        margin-top: 14px;
+        padding: 12px;
+        border: none;
+        border-radius: 14px;
+        background: #4f46e5;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    #info_form button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    #kaomojis {
+        display: grid;
+        place-items: center;
+    }
+
+    #kaomojis p {
+        color: rgb(92, 12, 62)
+    }
+
+    #lobby-logo {
+        animation: logoPop 1.5s ease-out forwards, float 2.5s ease-in-out infinite;
+        animation-delay: 0s, 0.8s;
+    }
+
+    @keyframes logoPop {
+        0% {
+            transform: scale(0.4);
+            opacity: 0;
+        }
+
+        60% {
+            transform: scale(1.15);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-6px);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+</style>
+
+{% endblock %}
