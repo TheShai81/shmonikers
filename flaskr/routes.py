@@ -13,7 +13,7 @@ active_games = {}
 # storage of active turn flags. False = Running. True = Needs to stop.
 stop_turn_events = {}
 # debugging variable only. change to make timer during rounds speed up or slow down. Timer in seconds.
-TIMER_LENGTH = .3
+TIMER_LENGTH = 1
 
 @bp.route('/')
 def lobby():
@@ -402,5 +402,6 @@ def game_over(game_id, team_1, score_1, team_2, score_2):
         team_2=team_2,
         score_2=score_2
     )
+
 
 
