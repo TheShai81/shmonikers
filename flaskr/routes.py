@@ -20,21 +20,6 @@ def lobby():
     # lobby where players enter a game and pick a team
     return render_template('lobby.html')
 
-@bp.route('/catherine', methods=["POST", "GET"])
-def catherine():
-    answer_correct = False
-    has_attempted = False
-    if request.method == "POST":
-        cryptic_answer: str = str(request.form["answer"]).lower().strip()
-        has_attempted = True  # add "Try Again!" text from front end if the answer isn't correct
-        if cryptic_answer == "for shrimp":
-            has_attempted = False  # remove "Try Again!" text from front end
-            answer_correct = True
-
-    return render_template('catherine.html',
-                           answer_correct=answer_correct,
-                           has_attempted=has_attempted)
-
 @bp.route("/join", methods=["POST"])
 def join_game():
     player_name = request.form["player_name"]
@@ -417,4 +402,5 @@ def game_over(game_id, team_1, score_1, team_2, score_2):
         team_2=team_2,
         score_2=score_2
     )
+
 
